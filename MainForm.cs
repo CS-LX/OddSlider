@@ -1,8 +1,11 @@
+using System.Runtime.InteropServices;
+
 namespace OddSlider {
     public partial class MainForm : RoundedForm {
+
         public MainForm() {
             InitializeComponent();
-            DotButtonClickAction += () => { 
+            DotButtonClickAction += () => {
                 SettingsForm settings = new SettingsForm();
                 settings.ShowDialog();
             };
@@ -11,7 +14,17 @@ namespace OddSlider {
 
         public void ValueChanged(int value) {
             WH wH = new WH();
-            wH.ChangeVolume((double)value / 100, true);
+            switch (GlobalData.Mode) {
+                case Mode.音量控制:
+                    wH.ChangeVolume((double)value / 100, true);
+                    break;
+                case Mode.屏幕亮度控制:
+                    WindowsSettingsBrightnessController.Set(value);
+                    using (PhysicalMonitorBrightnessController controller = new PhysicalMonitorBrightnessController()) {
+                        controller.Set((uint)value);
+                    }
+                    break;
+            }
         }
     }
 }
