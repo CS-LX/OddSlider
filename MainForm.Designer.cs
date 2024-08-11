@@ -55,11 +55,13 @@ namespace OddSlider {
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackgroundColor = Color.White;
-            ClientSize = new Size(392, 148);
+            ClientSize = new Size(392, 121);
             CloseButtonColor = Color.LightSteelBlue;
             CloseButtonHoverColor = Color.CadetBlue;
             Controls.Add(flatSlider1);
             CornerRadius = 25;
+            DotButtonColor = Color.LightSteelBlue;
+            DotButtonHoverColor = Color.CadetBlue;
             Name = "MainForm";
             Text = "Form1";
             ResumeLayout(false);

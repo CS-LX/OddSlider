@@ -7,9 +7,10 @@ using System.ComponentModel;
 public class RoundedForm : Form {
     private const int WM_NCPAINT = 0x0085;
     private const int WM_NCCALCSIZE = 0x0083;
-    private const int ButtonSize = 20; // 缩小关闭按钮尺寸
-    private const int ButtonPadding = 10;
+    private const int ButtonSize = 20; // 按钮尺寸
+    private const int ButtonPadding = 10; // 按钮间距
     private Rectangle closeButtonRect;
+    private Rectangle dotButtonRect;
 
     [DllImport("gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
     private static extern IntPtr CreateRoundRectRgn(int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
@@ -17,6 +18,7 @@ public class RoundedForm : Form {
     [DllImport("user32.dll")]
     private static extern bool SetWindowRgn(IntPtr hWnd, IntPtr hRgn, bool bRedraw);
 
+    // Public properties
     [Browsable(true)]
     [Category("Appearance")]
     [Description("Gets or sets the corner radius of the rounded form.")]
@@ -37,7 +39,23 @@ public class RoundedForm : Form {
     [Description("Gets or sets the color of the close button when hovered.")]
     public Color CloseButtonHoverColor { get; set; } = Color.DarkGray;
 
+    [Browsable(true)]
+    [Category("Appearance")]
+    [Description("Gets or sets the color of the dot button.")]
+    public Color DotButtonColor { get; set; } = Color.Gray;
+
+    [Browsable(true)]
+    [Category("Appearance")]
+    [Description("Gets or sets the color of the dot button when hovered.")]
+    public Color DotButtonHoverColor { get; set; } = Color.DarkGray;
+
+    [Browsable(true)]
+    [Category("Behavior")]
+    [Description("Gets or sets the action to be triggered when the dot button is clicked.")]
+    public Action DotButtonClickAction { get; set; }
+
     private bool isHoveringCloseButton = false;
+    private bool isHoveringDotButton = false;
 
     public RoundedForm() {
         this.FormBorderStyle = FormBorderStyle.None;
@@ -51,24 +69,38 @@ public class RoundedForm : Form {
 
     private void RoundedForm_Load(object sender, EventArgs e) {
         SetWindowRegion();
+        ArrangeButtons();
     }
 
     private void RoundedForm_Paint(object sender, PaintEventArgs e) {
-        // 绘制背景颜色
+        // Draw background color
         using (SolidBrush brush = new SolidBrush(BackgroundColor)) {
             e.Graphics.FillRectangle(brush, this.ClientRectangle);
         }
 
-        // 绘制关闭按钮
+        // Draw close button
         closeButtonRect = new Rectangle(this.ClientSize.Width - ButtonSize - ButtonPadding, ButtonPadding, ButtonSize, ButtonSize);
+        Color closeButtonColor = isHoveringCloseButton ? CloseButtonHoverColor : CloseButtonColor;
 
-        // 关闭按钮颜色
-        Color buttonColor = isHoveringCloseButton ? CloseButtonHoverColor : CloseButtonColor;
-
-        // 绘制叉叉本体
-        using (Pen pen = new Pen(buttonColor, 2)) {
+        // Draw close button body
+        using (Pen pen = new Pen(closeButtonColor, 2)) {
             e.Graphics.DrawLine(pen, closeButtonRect.Left + 4, closeButtonRect.Top + 4, closeButtonRect.Right - 4, closeButtonRect.Bottom - 4);
             e.Graphics.DrawLine(pen, closeButtonRect.Left + 4, closeButtonRect.Bottom - 4, closeButtonRect.Right - 4, closeButtonRect.Top + 4);
+        }
+
+        // Draw dot button (three horizontal dots)
+        dotButtonRect = new Rectangle(this.ClientSize.Width - 2 * (ButtonSize + ButtonPadding), ButtonPadding, ButtonSize, ButtonSize);
+        Color dotButtonColor = isHoveringDotButton ? DotButtonHoverColor : DotButtonColor;
+
+        // Draw three horizontal dots, centered vertically with close button
+        using (SolidBrush dotBrush = new SolidBrush(dotButtonColor)) {
+            int dotSize = 4;
+            int startX = dotButtonRect.Left + (ButtonSize - 3 * dotSize - 2 * 3) / 2; // Adjusted spacing
+            int centerY = dotButtonRect.Top + (ButtonSize - dotSize) / 2;
+
+            e.Graphics.FillEllipse(dotBrush, startX, centerY, dotSize, dotSize);
+            e.Graphics.FillEllipse(dotBrush, startX + dotSize + 3, centerY, dotSize, dotSize);
+            e.Graphics.FillEllipse(dotBrush, startX + 2 * (dotSize + 3), centerY, dotSize, dotSize);
         }
     }
 
@@ -76,6 +108,7 @@ public class RoundedForm : Form {
         base.OnSizeChanged(e);
         if (this.Handle != IntPtr.Zero) {
             SetWindowRegion();
+            ArrangeButtons();
         }
     }
 
@@ -86,7 +119,6 @@ public class RoundedForm : Form {
 
     protected override void WndProc(ref Message m) {
         if (m.Msg == WM_NCCALCSIZE || m.Msg == WM_NCPAINT) {
-            // Avoid default non-client area calculation and painting
             return;
         }
 
@@ -101,6 +133,9 @@ public class RoundedForm : Form {
             if (closeButtonRect.Contains(e.Location)) {
                 this.Close();
             }
+            else if (dotButtonRect.Contains(e.Location) && DotButtonClickAction != null) {
+                DotButtonClickAction.Invoke();
+            }
             else {
                 isDragging = true;
                 dragStartPoint = e.Location;
@@ -114,11 +149,17 @@ public class RoundedForm : Form {
             this.Top += e.Y - dragStartPoint.Y;
         }
         else {
-            // 检测鼠标是否在关闭按钮上
-            bool newHoverState = closeButtonRect.Contains(e.Location);
-            if (newHoverState != isHoveringCloseButton) {
-                isHoveringCloseButton = newHoverState;
-                this.Invalidate(); // 重新绘制
+            bool newHoverClose = closeButtonRect.Contains(e.Location);
+            bool newHoverDot = dotButtonRect.Contains(e.Location);
+
+            if (newHoverClose != isHoveringCloseButton) {
+                isHoveringCloseButton = newHoverClose;
+                this.Invalidate();
+            }
+
+            if (newHoverDot != isHoveringDotButton) {
+                isHoveringDotButton = newHoverDot;
+                this.Invalidate();
             }
         }
     }
@@ -130,10 +171,15 @@ public class RoundedForm : Form {
     }
 
     private void RoundedForm_MouseLeave(object sender, EventArgs e) {
-        // 当鼠标离开窗体时，确保关闭按钮颜色恢复
-        if (isHoveringCloseButton) {
+        if (isHoveringCloseButton || isHoveringDotButton) {
             isHoveringCloseButton = false;
-            this.Invalidate(); // 重新绘制
+            isHoveringDotButton = false;
+            this.Invalidate();
         }
+    }
+
+    private void ArrangeButtons() {
+        closeButtonRect = new Rectangle(this.ClientSize.Width - ButtonSize - ButtonPadding, ButtonPadding, ButtonSize, ButtonSize);
+        dotButtonRect = new Rectangle(this.ClientSize.Width - 2 * (ButtonSize + ButtonPadding), ButtonPadding, ButtonSize, ButtonSize);
     }
 }
