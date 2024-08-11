@@ -125,6 +125,8 @@ public class FlatSlider : Control {
         set { thumbSize = value; Invalidate(); }
     }
 
+    public Action<int> ValueChanged { get; set; }
+
     public FlatSlider() {
         this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.OptimizedDoubleBuffer, true);
         this.Height = thumbSize + 10; // Adjust height to fit the thumb
@@ -230,5 +232,6 @@ public class FlatSlider : Control {
     private void UpdateValue(int mouseX) {
         int newValue = (int)(((float)(mouseX - thumbSize / 2) / (this.Width - thumbSize)) * (Maximum - Minimum) + Minimum);
         Value = Math.Max(Minimum, Math.Min(Maximum, newValue));
+        if (ValueChanged != null) { ValueChanged(Value); }
     }
 }

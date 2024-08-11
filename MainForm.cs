@@ -6,6 +6,12 @@ namespace OddSlider {
                 SettingsForm settings = new SettingsForm();
                 settings.ShowDialog();
             };
+            flatSlider1.ValueChanged = ValueChanged;
+        }
+
+        public void ValueChanged(int value) {
+            WH wH = new WH();
+            wH.ChangeVolume((double)value / 100, true);
         }
     }
 }
