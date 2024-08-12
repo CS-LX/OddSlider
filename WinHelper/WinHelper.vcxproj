@@ -19,9 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DesktopIconChanger.h" />
     <ClInclude Include="WH.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DesktopIconChanger.cpp" />
     <ClCompile Include="WH.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -5,6 +5,8 @@
 #include <endpointvolume.h> // For IAudioEndpointVolume
 #include <comdef.h>       // For HRESULT
 
+#include "DesktopIconChanger.h"
+
 bool WH::ChangeVolume(double nVolume, bool bScalar)
 {
 
@@ -53,4 +55,9 @@ bool WH::ChangeVolume(double nVolume, bool bScalar)
     CoUninitialize();
 
     return FALSE;
+}
+
+int WH::SetDesktopIconSize(int size)
+{
+    return DesktopIconChanger::SetDesktopIconSize(size);
 }

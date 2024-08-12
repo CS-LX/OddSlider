@@ -12,6 +12,7 @@ namespace OddSlider {
 
     public enum Mode {
         音量控制 = 0,
-        屏幕亮度控制 = 1
+        屏幕亮度控制 = 1,
+        桌面图标尺寸 = 2
     }
 }

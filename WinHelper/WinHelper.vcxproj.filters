@@ -18,9 +18,15 @@
     <ClInclude Include="WH.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DesktopIconChanger.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WH.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DesktopIconChanger.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

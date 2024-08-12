@@ -26,6 +26,9 @@ namespace OddSlider {
                         controller.Set((uint)value);
                     }
                     break;
+                case Mode.桌面图标尺寸:
+                    wH.SetDesktopIconSize(value);
+                    break;
             }
         }
 
