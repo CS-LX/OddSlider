@@ -6,8 +6,10 @@ namespace OddSlider {
         public MainForm() {
             InitializeComponent();
             DotButtonClickAction += () => {
-                SettingsForm settings = new SettingsForm();
-                settings.ShowDialog();
+                Task.Run(() => {
+                    SettingsForm settings = new SettingsForm();
+                    settings.ShowDialog();
+                });
             };
             flatSlider1.ValueChanged = ValueChanged;
         }
@@ -25,6 +27,10 @@ namespace OddSlider {
                     }
                     break;
             }
+        }
+
+        private void updateTimer_Tick(object sender, EventArgs e) {
+            TopMost = GlobalData.TopMost;
         }
     }
 }

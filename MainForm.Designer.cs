@@ -23,8 +23,10 @@ namespace OddSlider {
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             flatSlider1 = new FlatSlider();
+            updateTimer = new System.Windows.Forms.Timer(components);
             SuspendLayout();
             // 
             // flatSlider1
@@ -49,6 +51,12 @@ namespace OddSlider {
             flatSlider1.TrackImage = (Image)resources.GetObject("flatSlider1.TrackImage");
             flatSlider1.TrackImageMode = PictureBoxSizeMode.StretchImage;
             flatSlider1.Value = 0;
+            flatSlider1.ValueChanged = null;
+            // 
+            // updateTimer
+            // 
+            updateTimer.Enabled = true;
+            updateTimer.Tick += updateTimer_Tick;
             // 
             // MainForm
             // 
@@ -70,5 +78,6 @@ namespace OddSlider {
         #endregion
 
         private FlatSlider flatSlider1;
+        private System.Windows.Forms.Timer updateTimer;
     }
 }

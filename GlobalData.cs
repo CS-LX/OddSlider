@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace OddSlider {
     public static class GlobalData {
         public static Mode Mode { get; set; } = Mode.音量控制;
+        public static bool TopMost = false;
     }
 
     public enum Mode {

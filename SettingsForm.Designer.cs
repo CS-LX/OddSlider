@@ -24,6 +24,7 @@ namespace OddSlider {
         /// </summary>
         private void InitializeComponent() {
             listBox1 = new ListBox();
+            topMostCheckbox = new CheckBox();
             SuspendLayout();
             // 
             // listBox1
@@ -34,11 +35,23 @@ namespace OddSlider {
             listBox1.Size = new Size(191, 124);
             listBox1.TabIndex = 0;
             // 
+            // topMostCheckbox
+            // 
+            topMostCheckbox.AutoSize = true;
+            topMostCheckbox.Location = new Point(209, 12);
+            topMostCheckbox.Name = "topMostCheckbox";
+            topMostCheckbox.Size = new Size(61, 24);
+            topMostCheckbox.TabIndex = 1;
+            topMostCheckbox.Text = "置顶";
+            topMostCheckbox.UseVisualStyleBackColor = true;
+            topMostCheckbox.CheckedChanged += topMostCheckbox_CheckedChanged;
+            // 
             // SettingsForm
             // 
             AutoScaleDimensions = new SizeF(9F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(215, 150);
+            ClientSize = new Size(331, 150);
+            Controls.Add(topMostCheckbox);
             Controls.Add(listBox1);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
@@ -48,10 +61,12 @@ namespace OddSlider {
             StartPosition = FormStartPosition.CenterParent;
             Text = "设置";
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private ListBox listBox1;
+        private CheckBox topMostCheckbox;
     }
 }

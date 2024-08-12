@@ -18,6 +18,7 @@ namespace OddSlider {
             InitializeListBox();
 
             listBox1.SelectedItem = GlobalData.Mode.ToString();
+            topMostCheckbox.Checked = GlobalData.TopMost;
 
             // 处理选项改变事件
             listBox1.SelectedIndexChanged += ListBox1_SelectedIndexChanged;
@@ -46,6 +47,10 @@ namespace OddSlider {
                 // 例如: 
                 // UpdateSomeUI(currentOption);
             }
+        }
+
+        private void topMostCheckbox_CheckedChanged(object sender, EventArgs e) {
+            GlobalData.TopMost = topMostCheckbox.Checked;
         }
     }
 }
