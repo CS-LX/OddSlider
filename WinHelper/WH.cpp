@@ -61,3 +61,8 @@ int WH::SetDesktopIconSize(int size)
 {
     return DesktopIconChanger::SetDesktopIconSize(size);
 }
+
+int WH::SetDesktopIconMode(int mode)
+{
+    return DesktopIconChanger::SetDesktopIconMode(mode);
+}

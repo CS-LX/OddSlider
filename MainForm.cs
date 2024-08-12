@@ -29,6 +29,9 @@ namespace OddSlider {
                 case Mode.桌面图标尺寸:
                     wH.SetDesktopIconSize(value);
                     break;
+                case Mode.桌面图标样式:
+                    wH.SetDesktopIconMode(value);
+                    break;
             }
         }
 
