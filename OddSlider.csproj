@@ -6,7 +6,12 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationIcon>aujhw-uei24.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="aujhw-uei24.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="System.Management" Version="8.0.0" />
